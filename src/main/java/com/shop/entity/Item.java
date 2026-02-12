@@ -20,7 +20,7 @@ public class Item {
     private Long id;  // 상품코드
     
     @Column(nullable = false, length = 50) // null 허용X, 길이 50개로 제한
-    private String ItemNm;  // 상품명
+    private String itemNm;  // 상품명
     
     @Column(name = "price", nullable = false)
     private int price;  // 가격
