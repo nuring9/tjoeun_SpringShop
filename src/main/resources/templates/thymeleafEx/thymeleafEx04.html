@@ -20,13 +20,22 @@
     </tr>
     </thead>
     <tbody>
-    <!--    <td th:if="${status.even}" th:text="짝수"></td>     -->
-    <!--    <td th:unless="${status.even}" th:text="홀수"></td>   -->
-    <!--        unless는 else로 사용. else if는 없음   -->
+
 
     <tr th:each="itemDto, status: ${itemDtoList}">
-        <!-- itemDtoList를 반복: itemDto는 현재 요소, status는 반복상태(인덱스 등) -->
-        <td th:text="${status.index}"></td>
+        <!-- itemDtoList를 반복: itemDto는 현재 요소, status는 반복상태(인덱스 등, 반복문에서 사용할 수 있는 보조 객체) -->
+
+        <!-- if 문 -->
+        <!--        unless는 else로 사용. else if는 없음   -->
+<!--        <td th:if="${status.even}" th:text="짝수"></td>-->
+<!--        <td th:unless="${status.even}" th:text="홀수"></td>-->
+
+        <!-- switch 문 -->
+        <td th:switch="${status.even}">
+            <span th:case="true">짝수</span>
+            <span th:case="false">홀수</span>
+        </td>
+
         <td th:text="${itemDto.itemNm}"></td>
         <td th:text="${itemDto.itemDetail}"></td>
         <td th:text="${itemDto.price}"></td>
