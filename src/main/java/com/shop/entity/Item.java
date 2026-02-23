@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Item {
+public class Item extends BaseEntity{
     @Id // 이 변수가 기본키
     @Column(name = "item_id") // 테이블 컬럼명 item_id
     @GeneratedValue(strategy = GenerationType.AUTO) // 테이블 내용 들어올때마다 1씩 증가
@@ -35,7 +35,7 @@ public class Item {
     @Enumerated(EnumType.STRING)  // Enum 타입인데, DB에 넣을 때 문자열로 넣음.
     private ItemSellStatus itemSellStatus; // 상품 판매 상태
 
-    private LocalDateTime regTime; // 등록 시간
-
-    private LocalDateTime updateTime;  // 수정 시간
+//    private LocalDateTime regTime; // 등록 시간
+//
+//    private LocalDateTime updateTime;  // 수정 시간
 }

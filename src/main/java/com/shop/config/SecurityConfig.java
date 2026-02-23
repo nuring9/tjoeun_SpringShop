@@ -48,10 +48,12 @@ public class SecurityConfig {
                 ).logout(logout -> logout
                         .logoutRequestMatcher(
                                 PathPatternRequestMatcher
-                                        .withDefaults().matcher(HttpMethod.GET,"/members/logout")
+                                        .withDefaults().matcher(HttpMethod.GET, "/members/logout")
                         )
                         .logoutSuccessUrl("/")
                 );
+        http.exceptionHandling(exception -> exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+        // custom 예외처리 추가
 
         // 실제 운영에서는 http.build()를 반환해야 정상 동작(Spring Security가 동작)
         // 실제 SecurityFilterChain 객체로 생성
@@ -72,7 +74,7 @@ public class SecurityConfig {
     // AuthenticationManagerBuilder 인증을 관리하는 객체
     // auth.userDetailsService(memberService) 사용자 정보를 DB에서 가져오는 서비스 지정
     @Autowired
-    public void configure(AuthenticationManagerBuilder auth) throws Exception{
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(memberService).passwordEncoder(passwordEncoder());
     }
     // Spring Security는 로그인 시
