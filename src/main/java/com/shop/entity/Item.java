@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+
 
 @Entity // 이 클래스가 entity가 될예정, 테이블
 @Table(name = "item") // 테이블명 item으로 
