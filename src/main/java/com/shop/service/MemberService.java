@@ -24,6 +24,10 @@ public class MemberService implements UserDetailsService {
     }
     // 1.중복 회원 검사 2.문제 없으면 저장 3.저장된 Entity 반환
 
+    public Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }  // 구글, 네이버 로그인때문에 추가
+
     private void validateDuplicateMember(Member member) {
         Member findMember = memberRepository.findByEmail(member.getEmail());
         if (findMember != null) {

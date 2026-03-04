@@ -21,4 +21,10 @@ public class Cart {
     private Member member;  // “이 Cart는 Member와 연결되어 있다”는 변수 선언
     
     // cart와 member 테이블생성
+
+    public static Cart createCart(Member member){
+        Cart cart = new Cart();
+        cart.setMember(member);
+        return cart;
+    }
 }

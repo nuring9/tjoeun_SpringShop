@@ -27,6 +27,8 @@ public class Member extends BaseEntity {
 
     private String address;
 
+    private String tel;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -35,6 +37,7 @@ public class Member extends BaseEntity {
         member.setName(memberFormDto.getName());
         member.setEmail(memberFormDto.getEmail());
         member.setAddress(memberFormDto.getAddress());
+        member.setTel(memberFormDto.getTel());
         String password = passwordEncoder.encode(memberFormDto.getPassword());
         member.setPassword(password);
         member.setRole(Role.ADMIN);

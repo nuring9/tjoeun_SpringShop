@@ -1,7 +1,6 @@
 package com.shop.config;
 
-// 스프링 설정 관련 어노테이션과 클래스 import
-
+import com.shop.service.CustomOidcUserService;
 import com.shop.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +22,9 @@ public class SecurityConfig {
     @Autowired
     MemberService memberService;
 
+    @Autowired
+    private CustomOidcUserService customOidcUserService;
+
     // Spring Security의 필터 체인을 Bean으로 등록
     // 필터체인이란 웹 요청이 들어오면 가장 먼저 거치는 보안 검사 라인, 즉 컨트롤러 가기 전에 스프링 시큐리티가 먼저 검사함.
     // HttpSecurity 객체를 이용해 보안 설정을 구성할 수 있음
@@ -33,9 +35,12 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth  // HTTP 요청에 대한 접근 권한을 설정하겠다(auth는 빌더 객체)
                                 .requestMatchers("/css/**", "/js/**", "/img/**", "/favicon.ico", "/error").permitAll()
                                 // css 폴더 하위 전부, js 폴더 하위 전부, img 폴더 하위 전부, favicon, error 이 URL들은 로그인 없이 접근 허용
-                                .requestMatchers("/", "/members/**", "/item/**", "/images/**").permitAll()
+                                .requestMatchers("/", "/members/**", "/item/**", "/images/**", "/naver/**").permitAll()
+                                //  구글 OAuth callback 허용
+                                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                                 // 일반 페이지 허용(메인 페이지, 회원가입, 상품 페이지) 모두 비회원 접근 가능.
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                                //  권한 제한 마지막에 넣기
                                 //   /admin/ 으로 시작하는 URL은 ROLE_ADMIN 권한이 있어야 접근 가능(DB에 저장된 권한이 ROLE_ADMIN)
                                 .anyRequest().authenticated()
                         // 나머지 모든 요청(위에 명시하지 않은 모든 요청은) 로그인해야 접근 가능
@@ -45,6 +50,10 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/")  // 로그인 성공 시 이동할 기본 URL
                         .usernameParameter("email") // 로그인 폼에서 아이디 파라미터 이름 지정 , MemberService를 email로 만들어놓음
                         .failureUrl("/members/login/error") // 로그인 실패 시 이동할 URL
+                ).oauth2Login(oauth2 -> oauth2
+                        .loginPage("/members/login")
+                        .defaultSuccessUrl("/")
+                        .userInfoEndpoint(userInfo -> userInfo.oidcUserService(customOidcUserService))
                 ).logout(logout -> logout
                         .logoutRequestMatcher(
                                 PathPatternRequestMatcher
@@ -77,6 +86,7 @@ public class SecurityConfig {
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(memberService).passwordEncoder(passwordEncoder());
     }
+
     // Spring Security는 로그인 시
     // 입력한 email 전달
     //DB에서 해당 회원 조회
